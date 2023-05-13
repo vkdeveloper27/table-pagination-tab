@@ -1,0 +1,185 @@
+<div class="pie-chart-container">
+  <div id="labels"></div>
+</div>
+<!--
+var svg = d3.select("svg"),
+    width = +500,
+    height = +200,
+    radius = Math.min(width, height) / 2,
+    g = svg.append("g").attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+var labels = d3.select("#labels");
+
+
+var pie = d3.pie()
+    .sort(null)
+    .value(function(d) { return d.market_cap; });
+
+var path = d3.arc()
+    .outerRadius(radius - 10)
+    .innerRadius(0);
+
+var outerArc = d3.arc()
+	    .innerRadius(radius * 0.9)
+	    .outerRadius(radius * 0.9);
+ 
+      
+var label = d3.arc()
+    .outerRadius(radius - 40)
+    .innerRadius(radius - 40);
+
+var csvData = "currency,market_cap\n";
+csvData += "Ethereum,28479743440\n"; 
+csvData += "Ripple,8082383399\n"; 
+csvData += "Bitcoin Cash,8767760760\n"; 
+csvData += "Litecoin,3642098421\n"; 
+csvData += "NEM,2514744000\n"; 
+csvData += "Dash,2363329943\n"; 
+csvData += "IOTA,1706859515\n"; 
+csvData += "Ethereum Classic,1539824432\n"; 
+csvData += "NEO,1138990000\n"; 
+csvData += "Monero,1761024916\n"; 
+csvData += "Stratis,569824176\n"; 
+csvData += "Bitcoin,70807286162\n"; 
+var data = d3.csvParse(csvData);
+data.forEach(function(d) {
+  d.market_cap = +d.market_cap;
+  return d;
+}); 
+
+  var arc = g.selectAll(".arc")
+    .data(pie(data))
+    .enter().append("g")
+      .attr("class", "arc");
+
+      
+      
+  arc.append("path")
+      .attr("d", path)
+      .attr("fill", function(d) { return color(d.data.currency); });
+
+
+
+// Now we'll draw our label lines, etc.
+
+   
+//--------------------------------------------
+
+    path.append("text")
+      
+      .attr("transform", function(d,i){
+        var pos = outerArc.centroid(d);
+        pos[0] = radius * (midAngle(d) < Math.PI ? 1.1 : -1.1);
+        
+    
+  var percent = (d.endAngle - d.startAngle)/(2*Math.PI)*100
+       if(percent<3){
+       //console.log(percent)
+       pos[1] += i*15
+       }
+        return "translate("+ pos +")";
+      })
+      .text(function(d) { return d.data.currency; })
+      .attr("fill", function(d,i) { return color(i); })
+      .attr("text-anchor", 'left')
+      .attr("dx", function(d){
+      var ac = midAngle(d) < Math.PI ? 0:-50
+              return ac
+      })
+      .attr("dy", 5 )
+      
+      
+     function midAngle(d) {
+      return d.startAngle + (d.endAngle - d.startAngle) / 2;
+    }
+
+    var polyline = g.selectAll("polyline")
+      .data(pie(data), function(d) {
+        return d.data.currency;
+      })
+      .enter()
+      .append("polyline")
+      .attr("points", function(d,i) {
+        var pos = outerArc.centroid(d);
+            pos[0] = radius * 0.95 * (midAngle(d) < Math.PI ? 1 : -1);
+         var o=   outerArc.centroid(d)
+ var percent = (d.endAngle -d.startAngle)/(2*Math.PI)*100
+       if(percent<3){
+       //console.log(percent)
+       o[1] 
+       pos[1] += i*15
+       }
+       //return [label.centroid(d),[o[0],0[1]] , pos];
+        return [label.centroid(d),[o[0],pos[1]] , pos];
+      })
+      .style("fill", "none")
+      //.attr('stroke','grey')
+      .attr("stroke", function(d,i) { return color(i); })
+      .style("stroke-width", "1px");
+
+
+
+
+
+
+
+
+
+
+      // Data for the pie chart
+var data = [
+  {label: "Apples", value: 20},
+  {label: "Bananas", value: 30},
+  {label: "Oranges", value: 15},
+  {label: "Grapes", value: 35}
+];
+
+// Set up the pie chart layout
+var pie = d3.pie()
+  .sort(null)
+  .value(function(d) { return d.value; });
+
+// Generate the arcs for the pie chart
+var arc = d3.arc()
+  .outerRadius(200)
+  .innerRadius(0);
+
+// Create a group element for the pie chart
+var pieGroup = svg.append("g")
+  .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+// Add the arcs to the pie chart
+var arcs = pieGroup.selectAll("path")
+  .data(pie(data))
+  .enter()
+  .append("path")
+  .attr("d", arc)
+  .attr("fill", function(d) { return color(d.data.label); });
+
+// Add the labels and lines to the pie chart
+var labelGroup = pieGroup.append("g");
+var linesGroup = pieGroup.append("g");
+
+arcs.each(function(d) {
+  var centroid = arc.centroid(d);
+  var labelPos = arc.centroid(d);
+  labelPos[0] = (arc.outerRadius() + 20) * (midAngle(d) < Math.PI ? 1 : -1);
+
+  labelGroup.append("text")
+    .attr("transform", "translate(" + labelPos + ")")
+    .attr("dy", ".35em")
+    .text(d.data.label);
+
+  linesGroup.append("polyline")
+    .attr("points", [arc.centroid(d), labelPos])
+    .attr("fill", "none")
+    .attr("stroke", "black")
+    .attr("stroke-width", 1);
+});
+
+// Helper function to compute the middle angle of an arc
+function midAngle(d) {
+  return d.startAngle + (d.endAngle - d.startAngle) / 2;
+}
+
+-->

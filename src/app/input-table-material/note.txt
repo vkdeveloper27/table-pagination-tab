@@ -1,0 +1,596 @@
+<div class="input-screen" *ngIf="data?.length">
+  <div  class="searchbox-top">
+    <div class="search-icon"></div>
+    <input type="text"  [(ngModel)]="searchTerm"  placeholder="Search"(keyup)="applyFilter($event)">
+  </div>
+  
+  <div class="table-container">
+      <!-- <input matInput placeholder="Search" (keyup)="applyFilter($event)" /> -->
+      <div class="table-body">
+      <table mat-table [dataSource]="paginatedData">
+        <ng-container
+          *ngFor="let column of displayedColumns; let i = index"
+          [matColumnDef]="column"
+          class="hover-effect"
+        >
+          <th style="color:black;font-size: 13px;
+          border-block-color: #16A086;padding-right: 40px;" mat-header-cell *matHeaderCellDef><b >{{ displayedColumns[i] }}</b></th>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            class="{{element[column]?.length>15?'long-text-cell':''}}"
+            [ngbTooltip]="element[column]?.length>15?element[column]:null"
+            [container]="'body'"
+            placement="top"
+          >
+            {{element[column]?.length>15?slice(element[column]):element[column]}}
+          </td>
+          
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns"
+          class="hover-effect"
+        ></tr>
+      </table>
+      </div>
+     
+      <div class="pagination-box" style="align-items: center;">
+      <ngb-pagination
+      [collectionSize]="filteredData?.length"
+      [(page)]="page"
+      [pageSize]="pageSize"
+      [maxSize]="4"
+      [rotate]="true"
+      (pageChange)="paginateData()"
+      [ellipses]="true"
+      [boundaryLinks]="false"
+      [directionLinks]="true"
+      [size]="'sm'"
+      class="custom-pagination"
+      >
+      
+      </ngb-pagination>
+      </div>
+      <div class="table-slider">
+        <span class="box-icon left-move" [class.disabled]="leftArrowDisabled"></span>
+         <!-- <mat-slider [min]="0" [max]="100" [value]="50" thumbLabel></mat-slider>
+        slider -->
+        <div class="slider">
+          <div class="bar">
+            <div class="scrollable">
+              
+            </div>
+          </div>
+        </div>
+        <span class="box-icon right-move"[class.disabled]="rightArrowDisabled"></span>
+      </div>
+      
+      <!-- <div class="slider">
+        <div class="bar">
+          <div class="scrollable">
+            
+          </div>
+        </div>
+      </div> -->
+     
+    </div> 
+    </div>
+    
+    ---------------------------|
+    CSS:
+    .table-container{
+  // width: 100%;
+  // overflow-x: scroll;
+  // overflow-y: hidden;
+  // white-space: nowrap;
+  // position: relative;
+}
+table {
+  width: 1250px;
+  //height for fixed
+  min-height: 400px;
+  overflow-y: hidden;
+  overflow-x: hidden;
+  border-collapse: collapse;
+  font-size: 16px;
+}
+th {
+  border-bottom: 1px solid green;
+  position: relative;
+  /* bottom: -20%; */
+}
+
+tr:last-child {
+  border-bottom: 1px solid #ccc;
+}
+.mat-header-row {
+  margin-bottom: 0px;
+}
+td {
+  position: relative;
+  align-items: center;
+  /* left: 4%; */
+  /* top: -3%; */
+  padding: 2px 0px;
+}
+
+/* This hover works  */
+table tr:hover {
+  background-color: #f5f5f5;
+  cursor: pointer;
+}
+.hover-effect:hover {
+  background-color: #f5f5f5;
+  cursor: pointer;
+}
+.long-text-cell {
+  white-space: nowrap;
+  overflow: hidden;
+  // text-overflow: ellipsis;
+  max-width: 10px;
+  position: relative;
+}
+ .long-text-cell::after {
+  content: '>>>';
+  color:#16A086;
+  font-size: 16px;
+  font-weight: 650;
+  position: absolute;
+  right: 0;
+  top: 0;
+  right: auto;
+    top: 15px
+} 
+.pagination-box{
+  display: flex;
+  justify-content: center;
+  margin: 10px;
+  position: sticky;
+}
+// .custom-pagination .page-link-prev:before{
+//   content: url("../../../../assets/images/arrow_icon.svg");
+// }
+// .pagination-box.custom-pagination .page-link-next::after{
+//   content: ">";
+// }
+
+
+.table-slider {
+    // position: relative;
+    // width: 330px;
+    // /* top: 39%; */
+    // margin-top: -34px;
+    // left: 59%;
+    // background-color: #16A086;
+    position: relative;
+    width: 250px;
+    /* top: 39%; */
+    margin-top: -33px;
+    left: 76%;
+    background-color: #16A086;
+}
+.box-icon{
+  // transform: matrix(0, -1, 1, 0, 0, 0);
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+  box-shadow: 0px 0px 5px #00000026;
+  border-radius: 5px;
+  opacity: 1;
+  width: 2rem;
+  height: 2rem;
+  margin-top: -2px;
+}
+.box-icon.right-move{
+  background-image: url(../../../../assets/images/arrow_icon.svg);
+  background-position: center;
+  background-size: 8px;
+  cursor: pointer;
+  position: fixed;
+  left: 93%;
+}
+
+.box-icon.left-move{
+  background-image: url(../../../../assets/images/arrow_icon.svg);
+  background-position: center;
+  background-size: 8px;
+  transform: rotate(180deg);
+  cursor: pointer;
+  position: fixed;
+  // left: 65%;
+  left:72%
+}
+.disabled{
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+::ng-deep .tooltip-inner {
+  text-align: left;
+  background-color: #fff;
+  color: #000;
+  border-radius: 4px;
+  padding: 7px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.3);
+  font-size: 14px;
+  font-weight: 500;
+
+}
+// ::ng-deep .tooltip-inner > .tooltip-arrow::before {
+//   border-bottom-color: blueviolet;
+// }
+
+.slider{
+  width: 250px;
+  // height: 20px;
+  background-color: #ccc;
+  // border-radius: 0px;
+  position: absolute;
+  top: 90%;
+  // left: 69%;
+
+  left: 0%;
+  height: 16px;
+}
+.bar{
+  width: 100%;
+  height: 100%;
+  // background-color: #333;
+  // border-radius: 10px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow-x: scroll;
+  cursor: pointer;
+  border-radius: 0;
+}
+
+.scrollable{
+  width: 1000px;
+  height: 100%;
+  background-color: #fff;
+}
+.bar::-webkit-scrollbar{
+  height: 8px;
+  border-radius: 0px;
+}
+.scrollable-webkit-scrollbar{
+  width: 2px;
+  border-radius: 0px;
+}
+input[type="text"]{
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+  box-shadow: inset 0px 0px 6px #00000067;
+  border: 1px solid #FFFFFF;
+  border-radius: 20px;
+  opacity: 1;
+  padding: 10px;
+  padding-left: 41px;
+  padding-right: 50px;
+  
+  }
+  hr{
+    margin-top: 0.5rem;
+    margin-bottom: 0.15em;
+    border: 0;
+    border-top: 2px solid rgba(0,0,0,.1)
+  }
+  .search-icon{
+   background : url('../../../../assets/images/search_icon.svg')  no-repeat 50% 50% ;;
+    top: 27px;
+    left: 14px;
+    width: 15px;
+    height: 15px;
+    //color: #16A086;
+    /* UI Properties */
+    //border: 2px solid #16A086;
+    opacity: 1;
+    background-size: 86%;
+    //position: absolute;
+    position: relative;
+  }
+  .dropdown-menu.dropdown-menu-right.filter-dropdown.ng-star-inserted.show {
+    width: 200px;
+    //transform: translate3d(-69px, -130px, 0px);
+  }
+  .searchbox-top {
+    margin-top: -131px;
+    position: absolute;
+    left: 59%;
+  
+  }
+  input[type="text"]::placeholder{
+  font: italic normal normal 14px/19px Montserrat;
+  letter-spacing: 0px;
+  color: #A3A4A1;
+  opacity: 1;
+  }
+  --------------------------------------
+  TS:
+    paginateData() {
+    const startIndex = (this.page - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.paginatedData = this.filteredData.slice(startIndex, endIndex);
+  }
+  slice(data:string)
+  {
+    return data.slice(0,15);
+  }
+
+
+
+------------------------------------------------
+0000000000000
+00000000
+
+
+
+To make use of the scroll bar code you provided earlier to control the overflow of the table, you can add some CSS styles to position the table inside the .scrollable container and apply the appropriate overflow and height properties to both the .scrollable and .bar containers. Here's an example:
+
+HTML:
+
+php
+Copy code
+<div class="slider">
+  <div class="bar">
+    <div class="scrollable">
+      <table>
+        <!-- table content here -->
+      </table>
+    </div>
+  </div>
+</div>
+CSS:
+
+css
+Copy code
+.slider {
+  position: relative;
+  width: 100%;
+  height: 300px; /* set the desired height of the scrollable area */
+  overflow: hidden;
+}
+
+.bar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+}
+
+.scrollable {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow-x: scroll; /* enable horizontal scrolling */
+  overflow-y: hidden; /* disable vertical scrolling */
+}
+
+table {
+  width: 100%;
+  /* add any other styles you need for the table */
+}
+This should allow you to use the scroll bar to control the overflow of the table horizontally. Note that you may need to adjust the styles based on the specifics of your layout and design.
+
+
+
+
+const slider = document.querySelector('.slider');
+const bar = document.querySelector('.bar');
+const scrollable = document.querySelector('.scrollable');
+
+// calculate the width of the scrollable element based on the size of the table
+scrollable.style.width = table.offsetWidth + 'px';
+
+// listen for mouse events on the slider and adjust the position of the scrollable element accordingly
+let isDragging = false;
+let startPosition = 0;
+let startScrollLeft = 0;
+
+scrollable.addEventListener('mousedown', function(event) {
+  isDragging = true;
+  startPosition = event.clientX;
+  startScrollLeft = scrollable.scrollLeft;
+});
+
+slider.addEventListener('mousemove', function(event) {
+  if (isDragging) {
+    const delta = event.clientX - startPosition;
+    const maxDelta = bar.offsetWidth - scrollable.offsetWidth;
+    const newScrollLeft = startScrollLeft + (delta / bar.offsetWidth) * maxDelta;
+    scrollable.style.transform = `translateX(${newScrollLeft}px)`;
+  }
+});
+
+document.addEventListener('mouseup', function(event) {
+  isDragging = false;
+});
+
+
+.slider {
+  width: 100%;
+  height: 20px;
+  position: relative;
+}
+
+.bar {
+  width: 100%;
+  height: 8px;
+  background-color: #ddd;
+  border-radius: 4px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.scrollable {
+  width: 50%;
+  height: 100%;
+  background-color: #333;
+  border-radius: 4px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translateX(0);
+  cursor: pointer;
+}
+
+
+
+import { Component, ElementRef, ViewChild, Renderer2 } from '@angular/core';
+
+@Component({
+  selector: 'app-my-component',
+  templateUrl: './my-component.component.html',
+  styleUrls: ['./my-component.component.css']
+})
+export class MyComponent {
+
+  @ViewChild('slider') slider: ElementRef;
+  @ViewChild('bar') bar: ElementRef;
+  @ViewChild('scrollable') scrollable: ElementRef;
+
+  isDragging = false;
+  startPosition = 0;
+  startScrollLeft = 0;
+
+  constructor(private renderer: Renderer2) { }
+
+  ngAfterViewInit() {
+    const slider = this.slider.nativeElement;
+    const bar = this.bar.nativeElement;
+    const scrollable = this.scrollable.nativeElement;
+
+    // calculate the width of the scrollable element based on the size of the table
+    this.renderer.setStyle(scrollable, 'width', scrollable.offsetWidth + 'px');
+
+    // listen for mouse events on the slider and adjust the position of the scrollable element accordingly
+    scrollable.addEventListener('mousedown', this.onMouseDown.bind(this));
+    slider.addEventListener('mousemove', this.onMouseMove.bind(this));
+    document.addEventListener('mouseup', this.onMouseUp.bind(this));
+  }
+
+  onMouseDown(event: MouseEvent) {
+    this.isDragging = true;
+    this.startPosition = event.clientX;
+    this.startScrollLeft = this.scrollable.nativeElement.scrollLeft;
+  }
+
+  onMouseMove(event: MouseEvent) {
+    if (this.isDragging) {
+      const delta = event.clientX - this.startPosition;
+      const maxDelta = this.bar.nativeElement.offsetWidth - this.scrollable.nativeElement.offsetWidth;
+      const newScrollLeft = this.startScrollLeft + (delta / this.bar.nativeElement.offsetWidth) * maxDelta;
+      this.renderer.setStyle(this.scrollable.nativeElement, 'transform', `translateX(${newScrollLeft}px)`);
+    }
+  }
+
+  onMouseUp(event: MouseEvent) {
+    this.isDragging = false;
+  }
+
+}
+
+
+const delta = event.clientX - startPosition;
+    const maxDelta = bar.offsetWidth - scrollable.offsetWidth;
+    const newScrollLeft = startScrollLeft + (delta / bar.offsetWidth) * maxDelta;
+    scrollable.style.transform = `translateX(${newScrollLeft}px)`;
+
+    // calculate the new scrollLeft value based on the position of the slider
+    const tableWidth = table.offsetWidth;
+    const scrollableWidth = scrollableTable.nativeElement.scrollWidth;
+    const scrollableLeft = scrollableTable.nativeElement.offsetLeft;
+    const scrollableDelta = maxDelta * (delta / bar.offsetWidth);
+    const newScrollableLeft = Math.min(Math.max(scrollableLeft - scrollableDelta, -(scrollableWidth - tableWidth)), 0);
+    scrollableTable.nativeElement.scrollLeft = -newScrollableLeft;
+
+
+
+    .custom-pagination ::ng-deep .page-link {
+  background-color: #f8f9fa;
+  color: #000;
+  border-color: #dee2e6;
+}
+
+.custom-pagination ::ng-deep .page-link:hover {
+  background-color: #e9ecef;
+  color: #000;
+  border-color: #dee2e6;
+}
+
+.custom-pagination ::ng-deep .page-item.disabled .page-link {
+  color: #6c757d;
+  pointer-events: none;
+  background-color: #fff;
+  border-color: #dee2e6;
+}
+
+.custom-pagination ::ng-deep .page-item.active .page-link {
+  background-color: #007bff;
+  color: #fff;
+  border-color: #007bff;
+}
+
+.custom-pagination ::ng-deep .page-link.previous, .custom-pagination ::ng-deep .page-link.next {
+  font-weight: bold;
+  font-size: 20px;
+  color: #007bff;
+}
+
+.custom-pagination ::ng-deep .page-link.previous, .custom-pagination ::ng-deep .page-link.next {
+  font-weight: bold;
+  font-size: 20px;
+  color: #007bff;
+}
+
+
+
+ <ng-template ngbPaginationPrevious>
+    <span class="prev-arrow">&lt;</span>
+  </ng-template>
+  <ng-template ngbPaginationNext>
+    <span class="next-arrow">&gt;</span>
+  </ng-template>
+
+    .prev-arrow {
+    font-size: 20px;
+    font-weight: bold;
+  }
+  
+  .next-arrow {
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+
+
+
+
+  .clear-button {
+  position: absolute;
+  top: 50%;
+  right: 5px;
+  transform: translateY(-50%);
+  font-size: 16px;
+  line-height: 1;
+  border: none;
+  background: transparent;
+  color: #ccc;
+  cursor: pointer;
+  transition: color 0.3s ease-in-out;
+}
+
+.clear-button:hover {
+  color: #333;
+}
+
+input[type="text"]:not(:placeholder-shown) + .clear-button {
+  display: block;
+}
+
+input[type="text"]:not(:placeholder-shown) + .clear-button:focus {
+  outline: none;
+}

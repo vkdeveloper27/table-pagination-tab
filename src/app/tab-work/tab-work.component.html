@@ -1,0 +1,46 @@
+<!-- <div class="tab-container">
+  <button class="arrow arrow-left" (click)="scrollTabs(-1)">&lt;</button>
+  <div class="tab-wrapper" #tabWrapper>
+    <ul class="tab-list" #tabList>
+      <li style="cursor:pointer" class="tab" *ngFor="let tab of tabs" (click)="activateTab(tab)">
+        {{ tab.title }}
+      </li>
+    </ul>
+  </div>
+  <button class="arrow arrow-right" (click)="scrollTabs(1)">&gt;</button>
+</div>
+
+
+<div class="tab-content">
+  <ng-container *ngFor="let tab of tabs">
+    <div *ngIf="selectedTab === tab">
+      {{ tab.content }}
+    </div>
+  </ng-container>
+</div> -->
+--------------------------------------------------------------------------
+<div class="tab-container">
+  <button class="arrow arrow-left" (click)="scrollTabs(-1)" [disabled]="leftArrowDisabled">&lt;</button>
+  <div class="tab-wrapper" #tabWrapper [class.tab-wrapper-disabled]="tabSelected">
+    <ul class="tab-list" #tabList>
+      <li style="cursor:pointer" class="tab" *ngFor="let tab of tabs" [class.tab-selected]="selectedTab === tab" (click)="activateTab($event,tab)">
+        {{ tab.title }}
+      </li>
+    </ul>
+  </div>
+  <button class="arrow arrow-right" (click)="scrollTabs(1)" [disabled]="rightArrowDisabled">&gt;</button>
+</div>
+
+
+<div class="tab-content">
+  <ng-container *ngFor="let tab of tabs">
+    <div *ngIf="selectedTab === tab">
+      {{ tab.content }}
+      <br>
+      left -{{leftArrowDisabled}}<br>
+     right- {{rightArrowDisabled}}
+    
+
+    </div>
+  </ng-container>
+</div>

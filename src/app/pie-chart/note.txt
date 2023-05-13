@@ -1,0 +1,74 @@
+
+var color = d3.scaleOrdinal(["#98abc5", 
+			     "#8a89a6", 
+			     "#7b6888", 
+			     "#6b486b", 
+			     "#a05d56", 
+			     "#d0743c", 
+			     "#ff8c00",
+			     "#e34d01",
+			     "#ccff05",
+			     "#3e7eca",
+			     "#aa0092",
+			     "#b32e4f"]);
+---------------------------------------------------------------------
+
+ var text = g
+    .selectAll('text')
+    .data(pie(<any>data))
+      
+      .attr("transform", function(d,i){
+        var pos = outerArc.centroid(d);
+        pos[0] = radius * (midAngle(d) < Math.PI ? 1.1 : -1.1);
+        
+    
+  var percent = (d.endAngle - d.startAngle)/(2*Math.PI)*100
+       if(percent<3){
+       //console.log(percent)
+       pos[1] += i*15
+       }
+        return "translate("+ pos +")";
+      })
+      .text(function(d) { return "Ok"; })
+     // .attr("fill", function(d,i) { return color(0); })
+      .attr("text-anchor", 'right')
+      .attr("dx", function(d){
+      var ac = midAngle(d) < Math.PI ? 0:-50
+              return ac
+      })
+      .attr("dy", 5 )
+      .attr('class', 'name-text')
+      .attr('transform', (d) => {
+        const [x, y] = labelArc.centroid(d);
+        return `translate(${x - 100}, ${y})`;
+      })
+      .text((d) => d.data.value);
+      
+      
+
+    var polyline = g.selectAll("polyline")
+      .data(pie(data), function(d) {
+        console.log(d.data.name)
+        return d.data.name;
+      })
+      .enter()
+      .append("polyline")
+      .attr("points", function(d,i) {
+        var pos = outerArc.centroid(d);
+            pos[0] = radius * 0.95 * (midAngle(d) < Math.PI ? 1 : -1);
+         var o=   outerArc.centroid(d)
+ var percent = (d.endAngle -d.startAngle)/(2*Math.PI)*100
+       if(percent<3){
+       //console.log(percent)
+       o[1] 
+       pos[1] += i*15
+       }
+       //return [label.centroid(d),[o[0],0[1]] , pos];
+        return [arc.centroid(d),[o[0],pos[1]] , pos];
+      })
+      .style("fill", "none")
+      //.attr('stroke','grey')
+      .attr("stroke", function(d,i) { return color(i); })
+      .style("stroke-width", "1.5px");
+
+

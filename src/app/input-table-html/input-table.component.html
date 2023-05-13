@@ -1,0 +1,26 @@
+<table>
+  <thead>
+    <tr style="border-bottom:1px solid #16A086;">
+      <th>Org Code</th>
+      <th>Material Code</th>
+      <th>Material Name</th>
+      <th>Raw Material Name</th>
+      <th>Raw Material Grade</th>
+      <th>BOM Weight</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr
+      class="row"
+      style="border-bottom:1px solid #ccc;"
+      *ngFor="let data of tabledata"
+    >
+      <td style="padding:2px;">{{ data.org_code }}</td>
+      <td style="padding:2px;">{{ data.materialcode }}</td>
+      <td style="padding:2px;">{{ data.Material_name }}</td>
+      <td style="padding:2px;">{{ data.Raw_materialname }}</td>
+      <td style="padding:2px;">{{ data.Rawmaterialgrade }}</td>
+      <td style="padding:2px;">{{ data.BOM_weight }}</td>
+    </tr>
+  </tbody>
+</table>
